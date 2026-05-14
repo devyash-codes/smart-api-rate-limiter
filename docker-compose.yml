@@ -1,0 +1,45 @@
+
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+
+    container_name: rate_limiter_backend
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    depends_on:
+      - postgres
+
+    volumes:
+      - ./:/app
+
+    restart: always
+
+  postgres:
+    image: postgres:16
+
+    container_name: rate_limiter_db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rate_limiter_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: always
+
+volumes:
+  postgres_data:
